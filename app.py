@@ -39,10 +39,15 @@ def add_transaction():
             if not request.form['date'] or not request.form['amount']:
                 return {"message": "Date and amount cannot be empty"}, 400
 
+            amount = float(request.form['amount'])
+            # Format amount: remove .0 for whole numbers
+            if amount == int(amount):
+                amount = int(amount)
+
             transaction = {
                 'id': len(transactions) + 1,
                 'date': request.form['date'],
-                'amount': float(request.form['amount'])
+                'amount': amount
             }
             transactions.append(transaction)
             return redirect(url_for('get_transactions'))
@@ -69,8 +74,12 @@ def edit_transaction(transaction_id):
             transaction_found = False
             for transaction in transactions:
                 if transaction['id'] == transaction_id:
+                    amount = float(request.form['amount'])
+                    # Format amount: remove .0 for whole numbers
+                    if amount == int(amount):
+                        amount = int(amount)
                     transaction['date'] = request.form['date']
-                    transaction['amount'] = float(request.form['amount'])
+                    transaction['amount'] = amount
                     transaction_found = True
                     break
 
